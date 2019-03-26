@@ -3,6 +3,7 @@ package cc.darhao.vvt.main;
 import java.util.Scanner;
 
 import cc.darhao.vvt.cpu.MethodCaller;
+import cc.darhao.vvt.heap.Leaker;
 import cc.darhao.vvt.heap.ObjectBox;
 import cc.darhao.vvt.jdbc.JDBCCaller;
 import cc.darhao.vvt.thread.LockThread;
@@ -15,7 +16,9 @@ public class Main {
 	
 	public static void main(String[] args) throws InterruptedException {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("0：线程运行测试；1：线程睡眠测试；2：线程锁测试；3：线程通知测试, 4：函数调用耗时测试, 5：对象存活测试, 6：查询DB");
+		System.out.println("0：线程运行测试；1：线程睡眠测试；2：线程锁测试");
+		System.out.println("3：线程通知测试；4：函数调用耗时测；5：对象存活测试");
+		System.out.println("6：查询DB；7：内存泄漏测试；8：内存溢出测试");
 		while(true) {
 			int commandId = scanner.nextInt();
 			switch (commandId) {
@@ -40,6 +43,12 @@ public class Main {
 			case 6:
 				jdbcTest();
 				break;
+			case 7:
+				memoryLeakTest();
+				break;
+			case 8:
+				oomTest();
+				break;
 			default:
 				scanner.close();
 				return;
@@ -48,6 +57,18 @@ public class Main {
 	}
 	
 	
+	private static void oomTest() {
+		while(true) {
+			new Leaker();
+		}
+	}
+
+
+	private static void memoryLeakTest() {
+		new Leaker();
+	}
+
+
 	private static void jdbcTest() {
 		JDBCCaller caller = new JDBCCaller();
 		try {
